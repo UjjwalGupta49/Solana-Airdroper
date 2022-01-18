@@ -32,10 +32,10 @@ const getWalletBalance = async () => {
 
 const airDropSol = async () => { // air drop function
     try {
-        console.log("Air dropping... 10 SOL");
+        console.log("Air dropping... 2 SOL");
         const fromAirDropSignature = await connection.requestAirdrop(
             pub,
-            10 * web3.LAMPORTS_PER_SOL // max airdrop at max 10 SOL in one transaction
+            2 * web3.LAMPORTS_PER_SOL // max airdrop at max 2 SOL in one transaction
         );
         await connection.confirmTransaction(fromAirDropSignature);    
         console.log("Drop successful!");    
