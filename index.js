@@ -8,20 +8,23 @@ const {
     Account,
    } = require("@solana/web3.js");
 
+const web3 = require("@solana/web3.js")
+
 
 console.log("Starting...");
 const newPair = new Keypair();
 const publicKey = new PublicKey(newPair._keypair.publicKey).toString(); // extracting the public key from accountInfo
 const secretKey = newPair._keypair.secretKey; // extracting the private key from accountInfo
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");  //Creates a connection object that will be used to get the balance on devnet.
+const myWallet = await Keypair.fromSecretKey(secretKey); //Creates a keypair object from the private key.
+const pub = new PublicKey(myWallet.publicKey) // public key instance
 
 const getWalletBalance = async () => {
     try {
-        const connection = new Connection(clusterApiUrl("devnet"), "confirmed"); //Creates a connection object that will be used to get the balance on devnet.
-        const myWallet = await Keypair.fromSecretKey(secretKey); //Creates a keypair object from the private key.
-        const walletBalance = await connection.getBalance(new PublicKey(myWallet.publicKey)); //Gets the balance of the wallet.
+        const walletBalance = await connection.getBalance(pub); //Gets the balance of the wallet.
         console.log(`Wallet balance: ${walletBalance}`);
-        console.log(`PublicKey ${publicKey}`);
-        console.log(`Wallet balance: ${parseInt(walletBalance)/LAMPORTS_PER_SOL}SOL`);
+        console.log(`PublicKey ${myWallet.publicKey}`);
+        console.log(`Wallet balance: ${parseInt(walletBalance)/web3.LAMPORTS_PER_SOL}SOL`);
     } catch (err) {
         console.log(err);
     }
@@ -29,12 +32,10 @@ const getWalletBalance = async () => {
 
 const airDropSol = async () => { // air drop function
     try {
-        const connection = new Connection(clusterApiUrl("devnet"), "confirmed"); // Creates a connection object that will be used to get the balance on devnet.
-        const walletKeyPair = await Keypair.fromSecretKey(secretKey); // Creates a keypair object from the private key.
         console.log("Air dropping... 10 SOL");
         const fromAirDropSignature = await connection.requestAirdrop(
-            new PublicKey(walletKeyPair.publicKey),
-            10 * LAMPORTS_PER_SOL // max airdrop at max 10 SOL in one transaction
+            pub,
+            10 * web3.LAMPORTS_PER_SOL // max airdrop at max 10 SOL in one transaction
         );
         await connection.confirmTransaction(fromAirDropSignature);    
         console.log("Drop successful!");    
