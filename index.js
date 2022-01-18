@@ -31,10 +31,10 @@ const airDropSol = async () => { // air drop function
     try {
         const connection = new Connection(clusterApiUrl("devnet"), "confirmed"); // Creates a connection object that will be used to get the balance on devnet.
         const walletKeyPair = await Keypair.fromSecretKey(secretKey); // Creates a keypair object from the private key.
-        console.log("Air dropping... 2SOL");
+        console.log("Air dropping... 10 SOL");
         const fromAirDropSignature = await connection.requestAirdrop(
             new PublicKey(walletKeyPair.publicKey),
-            2 * LAMPORTS_PER_SOL // max airdrop at max 10 SOL in one transaction
+            10 * LAMPORTS_PER_SOL // max airdrop at max 10 SOL in one transaction
         );
         await connection.confirmTransaction(fromAirDropSignature);    
         console.log("Drop successful!");    
